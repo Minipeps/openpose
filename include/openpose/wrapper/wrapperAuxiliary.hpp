@@ -757,7 +757,7 @@ namespace op
                     wrapperStructOutput.writeCocoJsonVariants,
                     (wrapperStructPose.poseModel != PoseModel::CAR_22
                         && wrapperStructPose.poseModel != PoseModel::CAR_12
-                        ? CocoJsonFormat::Body : CocoJsonFormat::Car),
+                        ? (wrapperStructPose.poseModel != PoseModel::PIG_5 ? CocoJsonFormat::Body : CocoJsonFormat::Pig) : CocoJsonFormat::Car),
                     wrapperStructOutput.writeCocoJsonVariant);
                 outputWs.emplace_back(std::make_shared<WCocoJsonSaver<TDatumsSP>>(cocoJsonSaver));
             }

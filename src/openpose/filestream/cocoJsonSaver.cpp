@@ -198,6 +198,14 @@ namespace op
                                     indexesInCocoOrder.emplace_back(i);
                         }
                     }
+					// Pig
+					else if (cocoJsonFormat == CocoJsonFormat::Pig)
+					{
+						imageId = getLastNumberWithErrorMessage(imageName, CocoJsonFormat::Pig);
+						// Pig_5
+						if (numberBodyParts == 5)
+							indexesInCocoOrder = std::vector<int>{ 0,1,2,3,4 };
+					}
                     // Sanity check
                     if (indexesInCocoOrder.empty())
                         error("Invalid number of body parts (" + std::to_string(numberBodyParts) + ").",

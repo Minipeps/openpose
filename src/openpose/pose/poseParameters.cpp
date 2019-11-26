@@ -250,6 +250,16 @@ namespace op
         {21, "BRCorner"},
         {22, "Background"},
     };
+
+	const std::map<unsigned int, std::string> POSE_PIG_5_PARTS{
+		{0,  "Neck"},
+		{1,  "LEar"},
+		{2,  "REar"},
+		{3,  "Nose"},
+		{4,  "Tail"},
+		//{5, "Background"},
+	};
+
     const std::array<std::vector<unsigned int>, (int)PoseModel::Size> POSE_MAP_INDEX{
         // BODY_25
         std::vector<unsigned int>{
@@ -364,13 +374,17 @@ namespace op
             // Eyes-Pupils
                296,297, 298,299, 300,301, 302,303
         },
+		// PIG_5
+		std::vector<unsigned int>{
+			0,1, 2,3, 4,5, 6,7
+		},
     };
     // POSE_BODY_PART_MAPPING on HPP crashes on Windows at dynamic initialization if it's on hpp
     const std::array<std::map<unsigned int, std::string>, (int)PoseModel::Size> POSE_BODY_PART_MAPPING{
         POSE_BODY_25_BODY_PARTS,POSE_COCO_BODY_PARTS,   POSE_MPI_BODY_PARTS,    POSE_MPI_BODY_PARTS,
         POSE_BODY_19_BODY_PARTS,POSE_BODY_19_BODY_PARTS,POSE_BODY_19_BODY_PARTS,POSE_BODY_25_BODY_PARTS,
         POSE_CAR_12_PARTS,      POSE_BODY_25_BODY_PARTS,POSE_BODY_23_BODY_PARTS,POSE_CAR_22_PARTS,
-        POSE_BODY_19_BODY_PARTS,POSE_BODY_25B_BODY_PARTS,POSE_BODY_135_BODY_PARTS
+        POSE_BODY_19_BODY_PARTS,POSE_BODY_25B_BODY_PARTS,POSE_BODY_135_BODY_PARTS,POSE_PIG_5_PARTS
     };
 
     const std::array<std::string, (int)PoseModel::Size> POSE_PROTOTXT{
@@ -389,6 +403,7 @@ namespace op
         "pose/body_19e/pose_deploy.prototxt",
         "pose/body_25b/pose_deploy.prototxt",
         "pose/body_135/pose_deploy.prototxt",
+		"pig/pig_5/pose_deploy.prototxt"
     };
     const std::array<std::string, (int)PoseModel::Size> POSE_TRAINED_MODEL{
         "pose/body_25/pose_iter_584000.caffemodel",
@@ -406,12 +421,13 @@ namespace op
         "pose/body_19e/pose_iter_XXXXXX.caffemodel",
         "pose/body_25b/pose_iter_XXXXXX.caffemodel",
         "pose/body_135/pose_iter_XXXXXX.caffemodel",
+		"pig/pig_5/pose_iter_XXXXXX.caffemodel",
     };
 
     // Constant Array Parameters
     // POSE_NUMBER_BODY_PARTS equivalent to size of std::map POSE_BODY_XX_BODY_PARTS - 1 (removing background)
     const std::array<unsigned int, (int)PoseModel::Size> POSE_NUMBER_BODY_PARTS{
-        25, 18, 15, 15, 19, 19, 19, 25, 12, 25, 23, 22, 19, 25, 135
+        25, 18, 15, 15, 19, 19, 19, 25, 12, 25, 23, 22, 19, 25, 135, 5
     };
     const std::array<std::vector<unsigned int>, (int)PoseModel::Size> POSE_BODY_PART_PAIRS{
         // BODY_25
@@ -533,7 +549,11 @@ namespace op
                F135+65,F135+66, F135+66,F135+67,
             // Eyes-Pupils
                F135+36,F135+68, F135+39,F135+68, F135+42,F135+69, F135+45,F135+69
-        }
+        },
+		// PIG_5
+		std::vector<unsigned int>{
+			0,1, 0,2, 0,3, 0,4
+		}
     };
 
     const std::map<unsigned int, std::string>& getPoseBodyPartMapping(const PoseModel poseModel)

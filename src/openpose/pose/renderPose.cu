@@ -17,7 +17,8 @@ namespace op
     __constant__ const unsigned int BODY_135_PAIRS_GPU[] = {POSE_BODY_135_PAIRS_RENDER_GPU};
     __constant__ const unsigned int MPI_PAIRS_GPU[] = {POSE_MPI_PAIRS_RENDER_GPU};
     __constant__ const unsigned int CAR_12_PAIRS_GPU[] = {POSE_CAR_12_PAIRS_RENDER_GPU};
-    __constant__ const unsigned int CAR_22_PAIRS_GPU[] = {POSE_CAR_22_PAIRS_RENDER_GPU};
+	__constant__ const unsigned int CAR_22_PAIRS_GPU[] = { POSE_CAR_22_PAIRS_RENDER_GPU };
+	__constant__ const unsigned int PIG_5_PAIRS_GPU[] = {POSE_PIG_5_PAIRS_RENDER_GPU};
     // Keypoint scales
     __constant__ const float BODY_25_SCALES[] = {POSE_BODY_25_SCALES_RENDER_GPU};
     __constant__ const float COCO_SCALES[] = {POSE_COCO_SCALES_RENDER_GPU};
@@ -28,6 +29,7 @@ namespace op
     __constant__ const float MPI_SCALES[] = {POSE_MPI_SCALES_RENDER_GPU};
     __constant__ const float CAR_12_SCALES[] = {POSE_CAR_12_SCALES_RENDER_GPU};
     __constant__ const float CAR_22_SCALES[] = {POSE_CAR_22_SCALES_RENDER_GPU};
+    __constant__ const float PIG_5_SCALES[] = {POSE_PIG_5_SCALES_RENDER_GPU};
     // RGB colors
     __constant__ const float BODY_25_COLORS[] = {POSE_BODY_25_COLORS_RENDER_GPU};
     __constant__ const float COCO_COLORS[] = {POSE_COCO_COLORS_RENDER_GPU};
@@ -38,6 +40,7 @@ namespace op
     __constant__ const float MPI_COLORS[] = {POSE_MPI_COLORS_RENDER_GPU};
     __constant__ const float CAR_12_COLORS[] = {POSE_CAR_12_COLORS_RENDER_GPU};
     __constant__ const float CAR_22_COLORS[] = {POSE_CAR_22_COLORS_RENDER_GPU};
+    __constant__ const float PIG_5_COLORS[] = {POSE_PIG_5_COLORS_RENDER_GPU};
 
 
 
@@ -446,6 +449,34 @@ namespace op
             (googlyEyes ? 6 : -1), (googlyEyes ? 7 : -1));
     }
 
+	__global__ void renderPosePig5(
+		float* targetPtr, float* minPtr, float* maxPtr, float* scalePtr, const int targetWidth, const int targetHeight,
+		const float* const posePtr, const int numberPeople, const float threshold, const bool googlyEyes,
+		const bool blendOriginalFrame, const float alphaColorToAdd)
+	{
+		const auto x = (blockIdx.x * blockDim.x) + threadIdx.x;
+		const auto y = (blockIdx.y * blockDim.y) + threadIdx.y;
+		const auto globalIdx = threadIdx.y * blockDim.x + threadIdx.x;
+
+		// Shared parameters
+		__shared__ float sharedMins[2 * POSE_MAX_PEOPLE];
+		__shared__ float sharedMaxs[2 * POSE_MAX_PEOPLE];
+		__shared__ float sharedScaleF[POSE_MAX_PEOPLE];
+
+		// Other parameters
+		const auto numberPartPairs = sizeof(PIG_5_PAIRS_GPU) / (2 * sizeof(PIG_5_PAIRS_GPU[0]));
+		const auto numberScales = sizeof(PIG_5_SCALES) / sizeof(PIG_5_SCALES[0]);
+		const auto numberColors = sizeof(PIG_5_COLORS) / (3 * sizeof(PIG_5_COLORS[0]));
+		const auto radius = fastMinCuda(targetWidth, targetHeight) / 100.f;
+		const auto lineWidth = fastMinCuda(targetWidth, targetHeight) / 120.f;
+
+		// Render key points
+		renderKeypoints(
+			targetPtr, sharedMaxs, sharedMins, sharedScaleF, maxPtr, minPtr, scalePtr, globalIdx, x, y, targetWidth,
+			targetHeight, posePtr, PIG_5_PAIRS_GPU, numberPeople, 5, numberPartPairs, PIG_5_COLORS, numberColors,
+			radius, lineWidth, PIG_5_SCALES, numberScales, threshold, alphaColorToAdd, blendOriginalFrame);
+	}
+
     __global__ void renderBodyPartHeatMaps(float* targetPtr, const int targetWidth, const int targetHeight,
                                            const float* const heatMapPtr, const int widthHeatMap,
                                            const int heightHeatMap, const float scaleToKeepRatio,
@@ -764,6 +795,12 @@ namespace op
                         framePtr, minPtr, maxPtr, scalePtr, frameSize.x, frameSize.y, posePtr, numberPeople,
                         renderThreshold, googlyEyes, blendOriginalFrame, alphaBlending
                     );
+				// Pig pose
+				else if (poseModel == PoseModel::PIG_5)
+					renderPosePig5 <<<threadsPerBlock, numBlocks >> > (
+						framePtr, minPtr, maxPtr, scalePtr, frameSize.x, frameSize.y, posePtr, numberPeople,
+						renderThreshold, googlyEyes, blendOriginalFrame, alphaBlending
+						);
                 // Unknown
                 else
                     error("Invalid Model.", __LINE__, __FUNCTION__, __FILE__);

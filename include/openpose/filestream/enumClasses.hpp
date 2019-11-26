@@ -19,6 +19,7 @@ namespace op
         Face,
         Foot,
         Car,
+		Pig,
         Size,
     };
 }

@@ -32,37 +32,40 @@ namespace op
             const std::string& poseModeStdString = poseModeString.getStdString();
             opLog("", Priority::Low, __LINE__, __FUNCTION__, __FILE__);
             // Body pose
-            if (poseModeStdString == "BODY_25")
-                return PoseModel::BODY_25;
-            else if (poseModeStdString == "COCO")
-                return PoseModel::COCO_18;
-            else if (poseModeStdString == "MPI")
-                return PoseModel::MPI_15;
-            else if (poseModeStdString == "MPI_4_layers")
-                return PoseModel::MPI_15_4;
-            else if (poseModeStdString == "BODY_19")
-                return PoseModel::BODY_19;
-            else if (poseModeStdString == "BODY_19E")
-                return PoseModel::BODY_19E;
-            else if (poseModeStdString == "BODY_19N")
-                return PoseModel::BODY_19N;
-            else if (poseModeStdString == "BODY_19_X2")
-                return PoseModel::BODY_19_X2;
-            else if (poseModeStdString == "BODY_23")
-                return PoseModel::BODY_23;
-            else if (poseModeStdString == "BODY_25B")
-                return PoseModel::BODY_25B;
-            else if (poseModeStdString == "BODY_25D")
-                return PoseModel::BODY_25D;
-            else if (poseModeStdString == "BODY_25E")
-                return PoseModel::BODY_25E;
-            else if (poseModeStdString == "BODY_135")
-                return PoseModel::BODY_135;
-            // Car pose
-            else if (poseModeStdString == "CAR_12")
-                return PoseModel::CAR_12;
-            else if (poseModeStdString == "CAR_22")
-                return PoseModel::CAR_22;
+			if (poseModeStdString == "BODY_25")
+				return PoseModel::BODY_25;
+			else if (poseModeStdString == "COCO")
+				return PoseModel::COCO_18;
+			else if (poseModeStdString == "MPI")
+				return PoseModel::MPI_15;
+			else if (poseModeStdString == "MPI_4_layers")
+				return PoseModel::MPI_15_4;
+			else if (poseModeStdString == "BODY_19")
+				return PoseModel::BODY_19;
+			else if (poseModeStdString == "BODY_19E")
+				return PoseModel::BODY_19E;
+			else if (poseModeStdString == "BODY_19N")
+				return PoseModel::BODY_19N;
+			else if (poseModeStdString == "BODY_19_X2")
+				return PoseModel::BODY_19_X2;
+			else if (poseModeStdString == "BODY_23")
+				return PoseModel::BODY_23;
+			else if (poseModeStdString == "BODY_25B")
+				return PoseModel::BODY_25B;
+			else if (poseModeStdString == "BODY_25D")
+				return PoseModel::BODY_25D;
+			else if (poseModeStdString == "BODY_25E")
+				return PoseModel::BODY_25E;
+			else if (poseModeStdString == "BODY_135")
+				return PoseModel::BODY_135;
+			// Car pose
+			else if (poseModeStdString == "CAR_12")
+				return PoseModel::CAR_12;
+			else if (poseModeStdString == "CAR_22")
+				return PoseModel::CAR_22;
+			// Pig pose
+			else if (poseModeStdString == "PIG_5")
+				return PoseModel::PIG_5;
             // else
             error("String (`" + poseModeStdString + "`) does not correspond to any model (BODY_25, COCO, MPI,"
                   " MPI_4_layers).", __LINE__, __FUNCTION__, __FILE__);

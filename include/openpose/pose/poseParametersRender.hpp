@@ -415,6 +415,17 @@ namespace op
           0.f,     0.f,   255.f, \
           0.f,     0.f,    64.f
 
+	// PIG_5
+	#define POSE_PIG_5_PAIRS_RENDER_GPU \
+			0,1, 0,2, 0,3, 4,0
+	#define POSE_PIG_5_SCALES_RENDER_GPU 1
+	#define POSE_PIG_5_COLORS_RENDER_GPU \
+        128.f,   128.f,   128.f, \
+        255.f,     0.f,     0.f, \
+        255.f,     0.f,     0.f, \
+          0.f,     0.f,   255.f, \
+          0.f,   255.f,     0.f, \
+
     // Rendering functions
     OP_API const std::vector<float>& getPoseScales(const PoseModel poseModel);
     OP_API const std::vector<float>& getPoseColors(const PoseModel poseModel);
